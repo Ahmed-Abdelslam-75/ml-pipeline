@@ -1,7 +1,7 @@
 import os
+import pandas as pd
 import mlflow
 import mlflow.sklearn
-from sklearn.datasets import load_iris
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
@@ -10,11 +10,15 @@ tracking_uri = os.getenv("MLFLOW_TRACKING_URI", "mlruns")
 mlflow.set_tracking_uri(tracking_uri)
 mlflow.set_experiment("iris-classifier")
 
-X, y = load_iris(return_X_y=True)
+# Load data pulled by DVC
+df = pd.read_csv("data/iris.csv")
+X = df.drop("target", axis=1)
+y = df["target"]
+
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-N_ESTIMATORS = 100
-MAX_DEPTH = None
+N_ESTIMATORS = 1
+MAX_DEPTH = 1
 
 with mlflow.start_run() as run:
     clf = RandomForestClassifier(n_estimators=N_ESTIMATORS, max_depth=MAX_DEPTH, random_state=42)
