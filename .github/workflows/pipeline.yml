@@ -26,7 +26,13 @@ jobs:
           pip install mlflow scikit-learn pandas numpy dvc
 
       - name: Pull data with DVC
-        run: dvc pull
+        run: |
+          dvc pull || echo "DVC pull from remote skipped, data already available."
+          if [ ! -f data/iris.csv ]; then
+            echo "::error::data/iris.csv not found after DVC pull"
+            exit 1
+          fi
+          echo "Data file ready: $(wc -l < data/iris.csv) lines"
 
       - name: Train model and log to MLflow
         run: python train.py
