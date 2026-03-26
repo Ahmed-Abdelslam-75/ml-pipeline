@@ -13,8 +13,8 @@ mlflow.set_experiment("iris-classifier")
 X, y = load_iris(return_X_y=True)
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-N_ESTIMATORS = 1
-MAX_DEPTH = 1
+N_ESTIMATORS = 100
+MAX_DEPTH = None
 
 with mlflow.start_run() as run:
     clf = RandomForestClassifier(n_estimators=N_ESTIMATORS, max_depth=MAX_DEPTH, random_state=42)
