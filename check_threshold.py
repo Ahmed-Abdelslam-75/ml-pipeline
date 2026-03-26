@@ -1,19 +1,20 @@
 import sys, os
-import mlflow
 
 THRESHOLD = 0.85
 
+# Read Run ID
 with open("model_info.txt") as f:
     run_id = f.read().strip()
 
 print(f"Checking Run ID: {run_id}")
 
-tracking_uri = os.getenv("MLFLOW_TRACKING_URI", "mlruns")
-mlflow.set_tracking_uri(tracking_uri)
+# Read accuracy from file (exported by train.py)
+if not os.path.exists("accuracy.txt"):
+    print("ERROR: accuracy.txt not found.")
+    sys.exit(1)
 
-client = mlflow.tracking.MlflowClient()
-run_data = client.get_run(run_id)
-accuracy = run_data.data.metrics.get("accuracy")
+with open("accuracy.txt") as f:
+    accuracy = float(f.read().strip())
 
 print(f"Recorded accuracy : {accuracy:.4f}")
 print(f"Required threshold: {THRESHOLD}")

@@ -31,7 +31,7 @@ jobs:
       - name: Train model and log to MLflow
         run: python train.py
         env:
-          MLFLOW_TRACKING_URI: ${{ github.workspace }}/mlruns
+          MLFLOW_TRACKING_URI: mlruns
 
       - name: Verify model_info.txt was created
         run: |
@@ -40,14 +40,15 @@ jobs:
             exit 1
           fi
           echo "MLflow Run ID: $(cat model_info.txt)"
+          echo "Accuracy: $(cat accuracy.txt)"
 
-      - name: Upload model_info.txt
+      - name: Upload model info
         uses: actions/upload-artifact@v4
         with:
           name: model-info
           path: |
             model_info.txt
-            mlruns/
+            accuracy.txt
 
   deploy:
     runs-on: ubuntu-latest
@@ -73,8 +74,6 @@ jobs:
 
       - name: Check accuracy threshold
         run: python check_threshold.py
-        env:
-          MLFLOW_TRACKING_URI: ${{ github.workspace }}/mlruns
 
       - name: Mock Docker build
         run: |
