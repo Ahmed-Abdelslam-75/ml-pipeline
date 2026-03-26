@@ -26,7 +26,7 @@ X_train, X_test, y_train, y_test = train_test_split(
 
 # ─── Weak model: depth=1 produces a very shallow tree ───────────────────────
 N_ESTIMATORS = 1
-MAX_DEPTH = 1             # <── forces underfitting → accuracy < 0.85
+MAX_DEPTH = 1          # <── forces underfitting → accuracy < 0.85
 
 with mlflow.start_run() as run:
     clf = RandomForestClassifier(
